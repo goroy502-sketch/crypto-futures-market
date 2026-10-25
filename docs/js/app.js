@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let allRows = [];
 
   const columns = [
-    "symbol", "price", "signal", "rsi", "adx",
+    "symbol", "price", "signal", "signalScore", "rsi", "adx",
     "macd", "macdSignal", "emaTrend", "volume",
     "volumeBreakout", "bbUpper", "bbLower", "atr",
     "timeframe", "updatedAt"
