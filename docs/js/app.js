@@ -1,37 +1,50 @@
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   const body = document.getElementById("signals-body");
   const status = document.getElementById("status");
+  const count = document.getElementById("count");
+  const search = document.getElementById("search");
+  const filter = document.getElementById("signalFilter");
+  const refresh = document.getElementById("refresh");
 
-  if (!body) {
-    console.error("Missing table body: signals-body");
-    if (status) status.textContent =
-      "Table setup missing. Update index.html first.";
-    return;
-  }
+  let allRows = [];
 
-  try {
-    if (status) status.textContent = "Loading scanner results...";
+  const columns = [
+    "symbol", "price", "signal", "rsi", "adx",
+    "macd", "macdSignal", "emaTrend", "volume",
+    "volumeBreakout", "bbUpper", "bbLower", "atr",
+    "timeframe", "updatedAt"
+  ];
 
-    const response = await fetch("signals.csv?t=" + Date.now());
-
-    if (!response.ok) {
-      throw new Error("signals.csv not found: " + response.status);
-    }
-
-    const csv = await response.text();
-    const lines = csv.trim().split(/\r?\n/);
-
-    if (lines.length < 2) {
-      throw new Error("No scanner results found");
-    }
+  function parseCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) return [];
 
     const headers = lines[0].split(",").map(x => x.trim());
-    const rows = lines.slice(1).map(line => {
+
+    return lines.slice(1).map(line => {
       const values = line.split(",");
-      return Object.fromEntries(
-        headers.map((header, i) => [header, values[i] ?? ""])
-      );
+      const row = {};
+      headers.forEach((header, i) => {
+        row[header] = (values[i] || "").trim();
+      });
+      return row;
+    });
+  }
+
+  function render() {
+    const query = search.value.trim().toUpperCase();
+    const selected = filter.value;
+
+    const rows = allRows.filter(row => {
+      const matchesCoin =
+        (row.symbol || "").toUpperCase().includes(query);
+
+      const signal = (row.signal || "").toUpperCase();
+      const matchesSignal =
+        selected === "ALL" || signal.includes(selected);
+
+      return matchesCoin && matchesSignal;
     });
 
     body.replaceChildren();
@@ -39,29 +52,64 @@ document.addEventListener("DOMContentLoaded", async () => {
     rows.forEach(row => {
       const tr = document.createElement("tr");
 
-      [
-        row.symbol,
-        row.price,
-        row.signal,
-        row.rsi,
-        row.adx,
-        row.macd,
-        row.emaTrend,
-        row.updatedAt
-      ].forEach(value => {
+      columns.forEach(key => {
         const td = document.createElement("td");
-        td.textContent = value || "—";
+        td.textContent = row[key] || "—";
+
+        if (key === "signal" || key === "emaTrend") {
+          const value = (row[key] || "").toUpperCase();
+          td.className = value.includes("BULLISH")
+            ? "bull"
+            : value.includes("BEARISH")
+              ? "bear"
+              : "neutral";
+        }
+
         tr.appendChild(td);
       });
 
       body.appendChild(tr);
     });
 
-    if (status) {
-      status.textContent = `Loaded ${rows.length} scanner results`;
-    }
-  } catch (error) {
-    console.error(error);
-    if (status) status.textContent = error.message;
+    count.textContent =
+      `Showing ${rows.length} of ${allRows.length} coins`;
   }
+
+  async function loadData() {
+    status.textContent = "Loading scanner results...";
+    refresh.disabled = true;
+
+    try {
+      const response = await fetch(
+        "signals.csv?t=" + Date.now(),
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error("CSV loading failed: HTTP " + response.status);
+      }
+
+      const text = await response.text();
+      allRows = parseCSV(text);
+
+      if (!allRows.length) {
+        throw new Error("CSV is empty or has no data rows");
+      }
+
+      render();
+      status.textContent = "Scanner data loaded successfully";
+    } catch (error) {
+      status.textContent = error.message;
+      count.textContent = "Data could not be loaded";
+      console.error(error);
+    } finally {
+      refresh.disabled = false;
+    }
+  }
+
+  search.addEventListener("input", render);
+  filter.addEventListener("change", render);
+  refresh.addEventListener("click", loadData);
+
+  loadData();
 });
