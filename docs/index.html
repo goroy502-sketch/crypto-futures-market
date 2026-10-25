@@ -1,52 +1,86 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080d1c">
-<title>Crypto Screener</title>
-<style>
-:root{color-scheme:dark;--bg:#080d1c;--panel:#111a2d;--line:#26334d;--muted:#9aaac4;--cyan:#20d9ff;--green:#39e6a4;--red:#ff6078;--purple:#9866ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% -10%,#102e61 0,transparent 42%),radial-gradient(ellipse at 100% 0,#24154e 0,transparent 35%),var(--bg);color:#eef4ff;font:14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{padding:20px 16px 17px;border-bottom:1px solid var(--line);background:#090f20cc;position:sticky;top:0;z-index:3;backdrop-filter:blur(12px)}
-.head{max-width:1250px;margin:auto;display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#13d9ff,#6847ff 70%);display:grid;place-items:center;box-shadow:0 0 28px #2563eb55;font-size:25px;font-weight:900}.brand{flex:1}h1{font-size:20px;margin:0;letter-spacing:.2px}.sub{font-size:12px;color:var(--muted);margin-top:4px}.pill{border:1px solid #255d6b;color:#7eeaff;border-radius:999px;padding:7px 10px;font-size:11px}
-main{max-width:1250px;margin:auto;padding:18px 14px 36px}.hero{padding:18px 0 20px}.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800}.hero h2{font-size:clamp(25px,5vw,38px);line-height:1.12;margin:9px 0}.hero p{color:var(--muted);max-width:700px;line-height:1.6;margin:0}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}.card,.toolbar,.tablebox,.module{background:linear-gradient(145deg,#141f35ed,#0d1425ed);border:1px solid var(--line);border-radius:15px}.card{padding:14px;min-width:0}.label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px}.value{font-size:24px;font-weight:750;margin-top:9px;overflow:hidden;text-overflow:ellipsis}.green{color:var(--green)}.red{color:var(--red)}.cyan{color:var(--cyan)}
-.toolbar{display:flex;gap:9px;flex-wrap:wrap;padding:12px;margin:15px 0}.toolbar input{flex:1;min-width:150px}input,select,button{font:inherit;color:#eef4ff;background:#0a1223;border:1px solid #2a3a57;border-radius:9px;padding:11px}button{cursor:pointer}button.primary{background:linear-gradient(120deg,#0c9fc2,#5644df);border:0;font-weight:700}button:hover{border-color:var(--cyan)}
-.modules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.module{padding:14px}.module .ico{font-size:20px}.module h3{margin:9px 0 5px;font-size:14px}.module p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
-.tablehead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px}.tablehead h3{margin:0;font-size:16px}.muted{color:var(--muted);font-size:12px}.tablebox{overflow:hidden}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th,td{text-align:left;padding:13px 14px;border-bottom:1px solid #202d43}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;background:#0d1629}td{font-size:13px}tbody tr:hover{background:#ffffff06}.signal{font-weight:800}.bull{color:var(--green)}.bear{color:var(--red)}.neutral{color:#a8b5cb}.tag{display:inline-block;padding:5px 8px;border-radius:7px;background:#1a2941;color:#c9d8f0;font-size:11px}.status{padding:14px;color:var(--muted);line-height:1.5}.foot{color:var(--muted);font-size:11px;line-height:1.6;padding:18px 2px}.hide{display:none}
-@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.modules{grid-template-columns:repeat(2,minmax(0,1fr))}.pill{display:none}.hero{padding-top:12px}.value{font-size:21px}}
-@media(max-width:380px){.modules{grid-template-columns:1fr 1fr}.card{padding:11px}.module{padding:11px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Futures Screener</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 18px;
+      background: #0b1020;
+      color: #e8efff;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 { color: #42e8c5; }
+
+    #status {
+      color: #aab8d5;
+      margin: 12px 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: #121a2e;
+      border: 1px solid #293653;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 750px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #293653;
+      white-space: nowrap;
+    }
+
+    th {
+      color: #42e8c5;
+      background: #17223a;
+    }
+
+    .note {
+      color: #9aa9c7;
+      font-size: 13px;
+    }
+  </style>
 </head>
 <body>
-<header><div class="head"><div class="logo">↗</div><div class="brand"><h1>Crypto Screener</h1><div class="sub">Futures analytics · Modular indicator engine</div></div><div class="pill">● SCREENER WORKSPACE</div></div></header>
-<main>
-<section class="hero"><div class="eyebrow">Market intelligence workspace</div><h2>Scan smarter.<br><span class="cyan">Find your setup.</span></h2><p>One workspace for technical indicators, futures market metrics and customizable coin filters. Connect your scanner output to show real signals here.</p></section>
-<section class="stats">
-<div class="card"><div class="label">Coins loaded</div><div class="value" id="total">—</div></div>
-<div class="card"><div class="label">Bullish signals</div><div class="value green" id="bull">—</div></div>
-<div class="card"><div class="label">Bearish signals</div><div class="value red" id="bear">—</div></div>
-<div class="card"><div class="label">Last updated</div><div class="value cyan" style="font-size:17px" id="updated">—</div></div>
-</section>
-<section class="modules">
-<div class="module"><div class="ico">〽️</div><h3>Momentum</h3><p>RSI · Stochastic RSI · MACD · CCI · Williams %R</p></div>
-<div class="module"><div class="ico">📈</div><h3>Trend</h3><p>ADX · EMA · SMA · Supertrend · Ichimoku · SAR</p></div>
-<div class="module"><div class="ico">🌊</div><h3>Volatility</h3><p>Bollinger Bands · ATR · Keltner · Donchian</p></div>
-<div class="module"><div class="ico">📊</div><h3>Volume & Futures</h3><p>OBV · MFI · CMF · Open Interest · Funding</p></div>
-</section>
-<section class="toolbar">
-<input id="search" placeholder="Search coin e.g. BTC_USDT" aria-label="Search coin">
-<select id="direction" aria-label="Signal filter"><option value="ALL">All signals</option><option value="BULLISH">Bullish</option><option value="BEARISH">Bearish</option><option value="NEUTRAL">Neutral / other</option></select>
-<select id="timeframe" aria-label="Timeframe filter"><option value="ALL">All timeframes</option><option>5m</option><option>15m</option><option>1h</option><option>4h</option><option>1d</option></select>
-<button class="primary" id="refresh">↻ Reload data</button>
-</section>
-<section class="tablebox">
-<div class="tablehead"><div><h3>Futures signal scanner</h3><div class="muted">Data file: <code>signals.csv</code></div></div><span class="tag" id="count">0 rows</span></div>
-<div class="scroll"><table><thead><tr><th>Coin</th><th>Price</th><th>Signal</th><th>MACD</th><th>RSI</th><th>ADX</th><th>Timeframe</th></tr></thead><tbody id="rows"></tbody></table></div>
-<div class="status" id="status">Loading scanner data…</div>
-</section>
-<div class="foot">This dashboard is a starter interface, not financial advice. Sample rows are examples only. For real results, connect your own permitted exchange data and scanner output. Indicator signals are not guaranteed to predict future prices.</div>
-</main>
-<script src="js/indicators.js"></script>
-<script src="js/app.js"></script>
-</body></html>
+  <h1>Crypto Futures Screener</h1>
+  <p class="note">CoinDCX Futures · Scanner Results</p>
+
+  <div id="status">Loading scanner results...</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Coin</th>
+          <th>Price</th>
+          <th>Signal</th>
+          <th>RSI</th>
+          <th>ADX</th>
+          <th>MACD</th>
+          <th>EMA Trend</th>
+          <th>Updated</th>
+        </tr>
+      </thead>
+      <tbody id="signals-body"></tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    Signals are technical indicators, not guaranteed predictions.
+  </p>
+
+  <script src="js/indicators.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
