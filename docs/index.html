@@ -6,57 +6,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crypto Futures Screener</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 18px;
-      background: #0b1020;
-      color: #e8efff;
+      padding: 16px;
+      background: #080d19;
+      color: #e7efff;
       font-family: Arial, sans-serif;
     }
-
-    h1 { color: #42e8c5; }
-
-    #status {
-      color: #aab8d5;
-      margin: 12px 0;
+    h1 { color: #45f0c5; margin-bottom: 5px; }
+    .sub { color: #8d9bb8; font-size: 13px; }
+    .panel {
+      background: #111a2d;
+      border: 1px solid #263653;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 16px 0;
     }
-
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    input, select, button {
+      background: #0b1324;
+      color: #e7efff;
+      border: 1px solid #30415f;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 14px;
+    }
+    input { flex: 1; min-width: 150px; }
+    button { cursor: pointer; color: #45f0c5; }
+    #status { color: #a9bad7; margin: 12px 0; }
     .table-wrap {
       overflow-x: auto;
-      background: #121a2e;
-      border: 1px solid #293653;
+      border: 1px solid #263653;
       border-radius: 10px;
     }
-
     table {
-      width: 100%;
-      min-width: 750px;
       border-collapse: collapse;
+      width: 100%;
+      min-width: 1450px;
+      font-size: 13px;
     }
-
     th, td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #293653;
       white-space: nowrap;
+      border-bottom: 1px solid #263653;
     }
-
-    th {
-      color: #42e8c5;
-      background: #17223a;
-    }
-
-    .note {
-      color: #9aa9c7;
-      font-size: 13px;
-    }
+    th { background: #17243b; color: #45f0c5; }
+    .bull { color: #45f0a1; }
+    .bear { color: #ff7185; }
+    .neutral { color: #ffc96b; }
+    .stats { color: #a9bad7; font-size: 13px; }
   </style>
 </head>
 <body>
   <h1>Crypto Futures Screener</h1>
-  <p class="note">CoinDCX Futures · Scanner Results</p>
+  <div class="sub">CoinDCX Futures · 15-minute signals</div>
 
-  <div id="status">Loading scanner results...</div>
+  <div class="panel">
+    <div class="controls">
+      <input id="search" placeholder="Search coin, e.g. BTC">
+      <select id="signalFilter">
+        <option value="ALL">All signals</option>
+        <option value="BULLISH">Bullish</option>
+        <option value="BEARISH">Bearish</option>
+        <option value="NEUTRAL">Neutral</option>
+      </select>
+      <button id="refresh">Refresh</button>
+    </div>
+    <div id="status">Loading scanner results...</div>
+    <div id="count" class="stats">Waiting for data...</div>
+  </div>
 
   <div class="table-wrap">
     <table>
@@ -68,7 +92,14 @@
           <th>RSI</th>
           <th>ADX</th>
           <th>MACD</th>
+          <th>MACD Signal</th>
           <th>EMA Trend</th>
+          <th>Volume</th>
+          <th>Volume Breakout</th>
+          <th>BB Upper</th>
+          <th>BB Lower</th>
+          <th>ATR</th>
+          <th>Timeframe</th>
           <th>Updated</th>
         </tr>
       </thead>
@@ -76,8 +107,9 @@
     </table>
   </div>
 
-  <p class="note">
-    Signals are technical indicators, not guaranteed predictions.
+  <p class="sub">
+    Technical indicators are informational, not guaranteed price predictions.
+    Scroll horizontally to see all columns on mobile.
   </p>
 
   <script src="js/indicators.js"></script>
