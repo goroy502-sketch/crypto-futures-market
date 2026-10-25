@@ -81,7 +81,7 @@ def main():
     updated = datetime.now(timezone.utc).isoformat()
 
     # Start with 20 USDT futures pairs; we can expand after testing.
-    for symbol, live_price in pairs[:20]:
+    for symbol, live_price in pairs:
         try:
             now = int(time.time())
             params = urllib.parse.urlencode({
