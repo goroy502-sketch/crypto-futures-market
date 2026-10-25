@@ -1,0 +1,3 @@
+symbol,price,signal,macd,rsi,adx,timeframe
+BTC_USDT,example,BULLISH,Example bullish cross,example,example,15m
+ETH_USDT,example,BEARISH,Example bearish cross,example,example,15m
