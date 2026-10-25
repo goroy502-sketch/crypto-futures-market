@@ -77,7 +77,8 @@ def main():
         if price > 0:
             pairs.append((symbol, price))
 
-    rows = []
+    print("Total USDT pairs found:", len(pairs))
+print("Pairs to scan:", len(pairs))
     updated = datetime.now(timezone.utc).isoformat()
 
     # Start with 20 USDT futures pairs; we can expand after testing.
