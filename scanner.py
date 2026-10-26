@@ -291,6 +291,8 @@ def main():
         except Exception as error:
             print(index, "SKIP", pair, str(error)[:160])
         time.sleep(0.15)
+print("CSV HEADERS:", HEADERS)
+print("FIRST RESULT:", results[0] if results else "NO RESULTS")
 
     with open(OUTPUT, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=HEADERS)
