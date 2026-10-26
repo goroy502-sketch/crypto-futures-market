@@ -95,45 +95,55 @@ def adx(candles, period=14):
     return sum(dx[-period:]) / len(dx[-period:]) if dx else None
 
 
-def calculate_signal_score(rsi_value, adx_value, macd_value,
-                           macd_signal, ema_trend, volume_breakout):
-    bullish = 0
-    bearish = 0
 
-    if ema_trend == "BULLISH":
-        bullish += 2
-    elif ema_trend == "BEARISH":
-        bearish += 2
+def calculate_signal_score(
+    signal,
+    rsi,
+    adx,
+    macd,
+    macd_signal,
+    ema_trend,
+    volume_breakout
+):
+    score = 0
 
-    if macd_value is not None and macd_signal is not None:
-        if macd_value > macd_signal:
-            bullish += 2
-        elif macd_value < macd_signal:
-            bearish += 2
+    # MACD direction: 25 points
+    if macd is not None and macd_signal is not None:
+        if signal == "BULLISH" and macd > macd_signal:
+            score += 25
+        elif signal == "BEARISH" and macd < macd_signal:
+            score += 25
 
-    if rsi_value is not None:
-        if 50 < rsi_value < 70:
-            bullish += 1
-        elif 30 < rsi_value < 50:
-            bearish += 1
+    # ADX trend strength: 20 points
+    if adx is not None:
+        if adx >= 25:
+            score += 20
+        elif adx >= 20:
+            score += 10
 
-    if adx_value is not None and adx_value >= 25:
-        if bullish > bearish:
-            bullish += 1
-        elif bearish > bullish:
-            bearish += 1
+    # RSI confirmation: 20 points
+    if rsi is not None:
+        if signal == "BULLISH" and 50 <= rsi <= 70:
+            score += 20
+        elif signal == "BEARISH" and 30 <= rsi <= 50:
+            score += 20
+        elif signal == "BULLISH" and rsi < 50:
+            score += 8
+        elif signal == "BEARISH" and rsi > 50:
+            score += 8
 
+    # EMA trend confirmation: 20 points
+    if signal == "BULLISH" and ema_trend == "BULLISH":
+        score += 20
+    elif signal == "BEARISH" and ema_trend == "BEARISH":
+        score += 20
+
+    # Volume breakout: 15 points
     if volume_breakout:
-        if bullish > bearish:
-            bullish += 1
-        elif bearish > bullish:
-            bearish += 1
+        score += 15
 
-    if bullish > bearish:
-        return "BULLISH", bullish
-    if bearish > bullish:
-        return "BEARISH", bearish
-    return "NEUTRAL", max(bullish, bearish)
+    return min(score, 100)
+
 
 
 def get_pairs():
